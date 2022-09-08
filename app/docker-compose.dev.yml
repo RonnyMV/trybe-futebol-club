@@ -1,9 +1,10 @@
-version: '3.9'
+version: "3.9"
 services:
   frontend:
     build: ./frontend
     ports:
       - 3000:3000
+    # platform: linux/x86_64
     working_dir: /app-frontend
     depends_on:
       backend:
@@ -11,7 +12,7 @@ services:
     # Os `healthcheck` devem garantir que a aplicação
     # está operacional, antes de liberar o container
     healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3000"]  # Caso utilize outra porta interna para o front, altere ela aqui também
+      test: ["CMD", "lsof", "-t", "-i:3000"] # Caso utilize outra porta interna para o front, altere ela aqui também
       timeout: 10s
       retries: 5
   backend:
@@ -19,6 +20,7 @@ services:
     build: ./backend
     ports:
       - 3001:3001
+    # platform: linux/x86_64
     working_dir: /app-backend
     command: npm run dev
     volumes: 
@@ -42,14 +44,14 @@ services:
   db:
     image: mysql:8.0.21
     container_name: db
-    platform: linux/x86_64
+    # platform: linux/x86_64
     ports:
       - 3002:3306
     environment:
       - MYSQL_ROOT_PASSWORD=123456
-    restart: 'always'
+    restart: "always"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"] # Deve aguardar o banco ficar operacional
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"] # Deve aguardar o banco ficar operacional
       timeout: 10s
       retries: 5
     cap_add:

@@ -1,10 +1,18 @@
 import * as express from 'express';
+import * as cors from 'cors';
+import LoginRouter from './routes/loginRoutes';
+import TeamsRouter from './routes/teams.routes';
+import errorMiddleware from './middlewares/errorHandler';
+import MatchesRouter from './routes/matches.routes';
+import LeaderBoardRouter from './routes/leaderboard.routes';
 
 class App {
   public app: express.Express;
 
   constructor() {
     this.app = express();
+    this.app.use(cors());
+    this.app.use(express.json());
 
     this.config();
 
@@ -20,8 +28,12 @@ class App {
       next();
     };
 
-    this.app.use(express.json());
     this.app.use(accessControl);
+    this.app.use(LoginRouter);
+    this.app.use(TeamsRouter);
+    this.app.use(MatchesRouter);
+    this.app.use(LeaderBoardRouter);
+    this.app.use(errorMiddleware);
   }
 
   public start(PORT: string | number):void {
